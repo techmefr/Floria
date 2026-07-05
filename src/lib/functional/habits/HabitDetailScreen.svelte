@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Card, Pill, Button } from '$lib/technical/ui-kit';
 	import { Flower, type FlowerStyle } from '$lib/functional/garden';
+	import { flowerIntensity } from '$lib/functional/session';
 	import { stats, todayAmount, todayFraction, paliers, formatPalierLabel } from './stats';
 	import type { IHabit, ILog } from './types';
 
@@ -39,7 +40,7 @@
 	let todayPaliers = $derived(paliers(habit, logs));
 
 	let bloom = $derived(0.55 + 0.45 * fraction);
-	let intensity = $derived(Math.max(0.2, habitStats.cons * (0.35 + 0.65 * (sunCount / 3))));
+	let intensity = $derived(flowerIntensity(habitStats.cons, sunCount));
 
 	let todayLabel = $derived(
 		`${formatPalierLabel(amount, habit.daily.unit)} / ${formatPalierLabel(habit.daily.target, habit.daily.unit)}`
