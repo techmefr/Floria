@@ -1,5 +1,5 @@
 import type { Family } from '$lib/functional/garden';
-import type { Cadence, IHabit, IHabitDaily } from './types';
+import type { IHabit, IHabitDaily } from './types';
 
 export function hashSeed(input: string): number {
 	let hash = 0;
@@ -38,8 +38,16 @@ export function familyForCategory(name?: string): Family {
 	return ALL_FAMILIES[hashSeed(normalized || 'habitude') % ALL_FAMILIES.length];
 }
 
-export function defaultDaily(_cadence: Cadence = 'quotidien'): IHabitDaily {
-	return { target: 1, step: 1, unit: 'fois' };
+const FAMILY_DAILY_DEFAULTS: Record<Family, IHabitDaily> = {
+	meditation: { target: 10, step: 2, unit: 'min' },
+	water: { target: 2, step: 0.25, unit: 'L', isLiquid: true },
+	poppy: { target: 30, step: 5, unit: 'min' },
+	cosmos: { target: 5, step: 1, unit: 'km' },
+	ranunculus: { target: 120, step: 15, unit: 's' }
+};
+
+export function defaultDaily(family: Family): IHabitDaily {
+	return FAMILY_DAILY_DEFAULTS[family];
 }
 
 export function buildHabit(partial: Partial<IHabit>): IHabit {
@@ -51,7 +59,7 @@ export function buildHabit(partial: Partial<IHabit>): IHabit {
 		name: partial.name ?? 'Nouvelle habitude',
 		family,
 		cadence: partial.cadence ?? 'quotidien',
-		daily: partial.daily ?? defaultDaily(partial.cadence),
+		daily: partial.daily ?? defaultDaily(family),
 		goal: partial.goal,
 		seed,
 		createdAt: Date.now()

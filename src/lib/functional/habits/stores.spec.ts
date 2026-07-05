@@ -75,4 +75,18 @@ describe('createHabitsStore', () => {
 			{ id: 'log-1', habitId: 'medit', ts: 1000, amount: 10 }
 		]);
 	});
+
+	test('resetAll clears both habits and logs, in memory and in persistence', async () => {
+		const kv = createInMemoryStore();
+		const store = createHabitsStore(kv);
+		await store.addHabit(makeHabit());
+		await store.addLog({ id: 'log-1', habitId: 'medit', ts: 1000, amount: 10 });
+
+		await store.resetAll();
+
+		expect(get(store.habits)).toEqual([]);
+		expect(get(store.logs)).toEqual([]);
+		expect(await kv.get('floria.habits')).toEqual([]);
+		expect(await kv.get('floria.logs')).toEqual([]);
+	});
 });

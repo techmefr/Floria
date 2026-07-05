@@ -38,4 +38,15 @@ describe('createPreferencesStore', () => {
 			gardenLayout: 'constellation'
 		});
 	});
+
+	test('resetAll restores the defaults, in memory and in persistence', async () => {
+		const kv = createInMemoryStore();
+		const store = createPreferencesStore(kv);
+		await store.update({ highContrast: true, fontScale: 1.3 });
+
+		await store.resetAll();
+
+		expect(get(store.preferences)).toEqual(DEFAULT_PREFERENCES);
+		expect(await kv.get('floria.preferences')).toEqual(DEFAULT_PREFERENCES);
+	});
 });

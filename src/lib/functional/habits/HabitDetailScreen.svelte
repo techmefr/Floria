@@ -31,7 +31,7 @@
 		onBack
 	}: Props = $props();
 
-	const hasTimedSession = $derived(habit.daily.unit !== 'L' && !habit.daily.isLiquid);
+	const hasTimedSession = $derived(habit.daily.unit === 'min' || habit.daily.unit === 's');
 	const isAsleep = $derived(sunCount <= 0);
 
 	let habitStats = $derived(stats(habit, logs));

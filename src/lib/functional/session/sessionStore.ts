@@ -26,6 +26,7 @@ export interface ISessionStore {
 	abandon(): Promise<void>;
 	complete(): Promise<void>;
 	applyInactivityPenalty(habitId: string, wasInactive: boolean, now?: number): Promise<void>;
+	resetAll(): Promise<void>;
 }
 
 export function createSessionStore(kv: IKeyValueStore): ISessionStore {
@@ -112,6 +113,16 @@ export function createSessionStore(kv: IKeyValueStore): ISessionStore {
 		await persistSuns({ ...get(suns), [habitId]: loseSun(get(suns)[habitId] ?? 3) });
 	}
 
+	async function resetAll(): Promise<void> {
+		lastPenalizedDay = {};
+		dispatch({ type: 'close' });
+		await persistSession();
+		await persistSuns({});
+		collected.set(0);
+		await kv.set(COLLECTED_KEY, 0);
+		await kv.set(LAST_PENALIZED_KEY, {});
+	}
+
 	return {
 		suns,
 		collected,
@@ -123,6 +134,7 @@ export function createSessionStore(kv: IKeyValueStore): ISessionStore {
 		resume,
 		abandon,
 		complete,
-		applyInactivityPenalty
+		applyInactivityPenalty,
+		resetAll
 	};
 }

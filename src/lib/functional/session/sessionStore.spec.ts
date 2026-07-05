@@ -108,4 +108,20 @@ describe('createSessionStore', () => {
 		expect(get(freshStore.collected)).toBe(1);
 		expect(get(freshStore.session)).toMatchObject({ habitId: 'sport', duration: 300 });
 	});
+
+	test('resetAll clears suns, collected count and any in-flight session', async () => {
+		const kv = createInMemoryStore();
+		const store = createSessionStore(kv);
+		await store.start('medit', 600, NOW);
+		await store.complete();
+		await store.start('sport', 300, NOW);
+
+		await store.resetAll();
+
+		expect(get(store.suns)).toEqual({});
+		expect(get(store.collected)).toBe(0);
+		expect(get(store.session)).toBeNull();
+		expect(await kv.get('floria.suns')).toEqual({});
+		expect(await kv.get('floria.collected')).toBe(0);
+	});
 });

@@ -13,6 +13,7 @@ export interface IHabitsStore {
 	updateHabit(id: string, patch: Partial<IHabit>): Promise<void>;
 	archiveHabit(id: string): Promise<void>;
 	addLog(log: ILog): Promise<void>;
+	resetAll(): Promise<void>;
 }
 
 export function createHabitsStore(kv: IKeyValueStore): IHabitsStore {
@@ -52,5 +53,10 @@ export function createHabitsStore(kv: IKeyValueStore): IHabitsStore {
 		await persistLogs([...get(logs), log]);
 	}
 
-	return { habits, logs, load, addHabit, updateHabit, archiveHabit, addLog };
+	async function resetAll(): Promise<void> {
+		await persistHabits([]);
+		await persistLogs([]);
+	}
+
+	return { habits, logs, load, addHabit, updateHabit, archiveHabit, addLog, resetAll };
 }

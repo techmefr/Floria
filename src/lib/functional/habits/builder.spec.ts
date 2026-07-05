@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { hashSeed, familyForCategory, buildHabit } from './builder';
+import { hashSeed, familyForCategory, defaultDaily, buildHabit } from './builder';
 
 describe('hashSeed', () => {
 	test('is deterministic for the same input', () => {
@@ -41,7 +41,7 @@ describe('buildHabit', () => {
 		expect(habit.name).toBe('Méditation du matin');
 		expect(habit.family).toBe('meditation');
 		expect(habit.cadence).toBe('quotidien');
-		expect(habit.daily).toEqual({ target: 1, step: 1, unit: 'fois' });
+		expect(habit.daily).toEqual({ target: 10, step: 2, unit: 'min' });
 		expect(habit.goal).toBeUndefined();
 		expect(typeof habit.id).toBe('string');
 		expect(habit.id.length).toBeGreaterThan(0);
@@ -77,5 +77,15 @@ describe('buildHabit', () => {
 		expect(adapted.id).toBe(original.id);
 		expect(adapted.family).toBe(original.family);
 		expect(adapted.daily).toEqual({ target: 2, step: 1, unit: 'fois' });
+	});
+});
+
+describe('defaultDaily', () => {
+	test('matches the MECHANICS.md daily targets for each flower family', () => {
+		expect(defaultDaily('meditation')).toEqual({ target: 10, step: 2, unit: 'min' });
+		expect(defaultDaily('water')).toEqual({ target: 2, step: 0.25, unit: 'L', isLiquid: true });
+		expect(defaultDaily('poppy')).toEqual({ target: 30, step: 5, unit: 'min' });
+		expect(defaultDaily('cosmos')).toEqual({ target: 5, step: 1, unit: 'km' });
+		expect(defaultDaily('ranunculus')).toEqual({ target: 120, step: 15, unit: 's' });
 	});
 });

@@ -8,6 +8,7 @@ export interface IPreferencesStore {
 	preferences: Writable<IPreferences>;
 	load(): Promise<void>;
 	update(patch: Partial<IPreferences>): Promise<void>;
+	resetAll(): Promise<void>;
 }
 
 export function createPreferencesStore(kv: IKeyValueStore): IPreferencesStore {
@@ -24,5 +25,10 @@ export function createPreferencesStore(kv: IKeyValueStore): IPreferencesStore {
 		await kv.set(PREFERENCES_KEY, next);
 	}
 
-	return { preferences, load, update };
+	async function resetAll(): Promise<void> {
+		preferences.set(DEFAULT_PREFERENCES);
+		await kv.set(PREFERENCES_KEY, DEFAULT_PREFERENCES);
+	}
+
+	return { preferences, load, update, resetAll };
 }
