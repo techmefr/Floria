@@ -1,0 +1,69 @@
+:root {
+	--color-desk-bg: #e9e3d6;
+	--color-app-bg: #faf6ec;
+	--gradient-page: radial-gradient(120% 90% at 50% 0%, #f2ecdf, #e6dfd0 60%, #ddd5c4);
+	--gradient-garden: linear-gradient(180deg, #f7f2e6, #f0ead9 60%, #eae2cf);
+
+	--color-text-title: #41402f;
+	--color-text-body: #3a362e;
+	--color-text-body-soft: #5b5442;
+	--color-text-muted: #a89e88;
+	--color-text-muted-soft: #b0a68e;
+	--color-text-italic: #7d7460;
+	--color-text-italic-soft: #9a9078;
+
+	--color-border-hairline: rgba(120, 110, 85, 0.12);
+	--color-surface-card: rgba(255, 255, 255, 0.5);
+	--color-surface-card-strong: rgba(255, 255, 255, 0.62);
+
+	--color-accent: #c98a6a;
+	--color-sun-full: #e0a84e;
+	--color-wake: #8fa678;
+
+	--color-accent-meditation: #8e7fb8;
+	--color-accent-water: #5b93c4;
+	--color-accent-sport: #d0694c;
+	--color-accent-course: #d98ba0;
+	--color-accent-planche: #b89a3e;
+
+	--font-title: 'Newsreader', serif;
+	--font-body: 'Figtree', sans-serif;
+
+	--font-scale: 1;
+	--text-h1: calc(31px * var(--font-scale));
+	--text-card-title: calc(17px * var(--font-scale));
+	--text-body: calc(14px * var(--font-scale));
+	--text-label: calc(12px * var(--font-scale));
+	--label-letter-spacing: 0.12em;
+
+	--radius-phone-frame: 46px;
+	--radius-card: 22px;
+	--radius-pill: 16px;
+	--radius-button: 16px;
+
+	--shadow-fab: 0 12px 26px -8px rgba(201, 138, 106, 0.8);
+	--shadow-card-plot: 0 6px 16px rgba(120, 110, 80, 0.05);
+
+	--duration-fill: 1s;
+	--easing-fill: cubic-bezier(0.34, 0.02, 0.2, 1);
+	--duration-sway: 5s;
+	--duration-float: 6.5s;
+	--duration-breathe: 5s;
+	--duration-wave: 7s;
+	--duration-fade-up: 0.4s;
+}
+
+:root[data-high-contrast='true'] {
+	--color-text-muted: #7d735d;
+	--color-text-muted-soft: #86795f;
+	--color-text-italic: #5f5644;
+	--color-text-italic-soft: #6b6250;
+}
+
+html {
+	font-size: calc(16px * var(--font-scale));
+}
+
+.tabular-nums {
+	font-variant-numeric: tabular-nums;
+}

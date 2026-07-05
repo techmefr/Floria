@@ -1,0 +1,83 @@
+@keyframes sway {
+	from {
+		transform: rotate(-1.6deg);
+	}
+	to {
+		transform: rotate(1.6deg);
+	}
+}
+
+@keyframes floatY {
+	from {
+		transform: translateY(-6px);
+	}
+	to {
+		transform: translateY(6px);
+	}
+}
+
+@keyframes breathe {
+	0% {
+		transform: scale(0.99);
+	}
+	100% {
+		transform: scale(1.03);
+	}
+}
+
+@keyframes wave {
+	from {
+		transform: translateX(-14px);
+	}
+	to {
+		transform: translateX(14px);
+	}
+}
+
+@keyframes fadeUp {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.sways {
+	transform-origin: bottom center;
+	animation: sway var(--duration-sway) ease-in-out infinite alternate;
+}
+
+.floats {
+	animation: floatY var(--duration-float) ease-in-out infinite alternate;
+}
+
+.breathes {
+	animation: breathe var(--duration-breathe) ease-in-out infinite alternate;
+}
+
+.waves {
+	animation: wave var(--duration-wave) ease-in-out infinite alternate;
+}
+
+.fades-up {
+	animation: fadeUp var(--duration-fade-up) ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sways,
+	.floats,
+	.breathes,
+	.waves {
+		animation: none;
+	}
+}
+
+:root[data-reduce-motion='true'] .sways,
+:root[data-reduce-motion='true'] .floats,
+:root[data-reduce-motion='true'] .breathes,
+:root[data-reduce-motion='true'] .waves {
+	animation: none;
+}
