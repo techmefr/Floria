@@ -3,6 +3,8 @@ import type { IChatMessage, IChatResponse, IToolDefinition } from './types';
 export interface ISendChatRequestParams {
 	messages: IChatMessage[];
 	tools?: IToolDefinition[];
+	provider?: string;
+	apiKey?: string;
 }
 
 export async function sendChatRequest(

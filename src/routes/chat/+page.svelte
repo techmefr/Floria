@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { get } from 'svelte/store';
+	import { env } from '$env/dynamic/public';
 	import { buildHabit, type IHabit } from '$lib/functional/habits';
 	import {
 		ChatScreen,
@@ -7,18 +8,16 @@
 		createHabitTools,
 		HABIT_TOOL_DEFINITIONS
 	} from '$lib/functional/coaching';
-	import {
-		sendChatRequest,
-		sendDirectChatRequest,
-		type IChatMessage
-	} from '$lib/technical/ai-client';
+	import { sendChatRequest, type IChatMessage } from '$lib/technical/ai-client';
 	import { getAppStores } from '../appStores';
 
 	const stores = getAppStores();
 	const habits = stores.habits.habits;
 	const preferences = stores.preferences.preferences;
 
-	const proxyUrl = import.meta.env.VITE_AI_PROXY_URL ?? '/api/chat';
+	const chatFunctionUrl =
+		import.meta.env.VITE_AI_PROXY_URL ??
+		(env.PUBLIC_SUPABASE_URL ? `${env.PUBLIC_SUPABASE_URL}/functions/v1/chat` : '/api/chat');
 
 	const habitTools = createHabitTools({
 		listHabits: () => get(habits),
@@ -28,10 +27,12 @@
 
 	function transport(messages: IChatMessage[]) {
 		const prefs = get(preferences);
-		if (prefs.aiProvider && prefs.aiApiKey) {
-			return sendDirectChatRequest(prefs.aiProvider, prefs.aiApiKey, messages);
-		}
-		return sendChatRequest(proxyUrl, { messages, tools: HABIT_TOOL_DEFINITIONS });
+		return sendChatRequest(chatFunctionUrl, {
+			messages,
+			tools: HABIT_TOOL_DEFINITIONS,
+			provider: prefs.aiProvider ?? undefined,
+			apiKey: prefs.aiApiKey ?? undefined
+		});
 	}
 
 	const chat = createChatStore(transport, habitTools);
