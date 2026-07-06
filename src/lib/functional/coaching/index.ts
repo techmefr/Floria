@@ -5,5 +5,5 @@ export {
 	extractSuggestions,
 	type IChatTurn
 } from './chatFlow';
-export { createChatStore, type IChatStore } from './chatStore';
+export { createChatStore, type IChatStore, type ChatTransport } from './chatStore';
 export { default as ChatScreen } from './ChatScreen.svelte';

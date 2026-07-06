@@ -1,7 +1,8 @@
 import type { GardenLayout } from '$lib/functional/habits';
 import type { FlowerStyle } from '$lib/functional/garden';
+import type { AiProvider } from '$lib/technical/ai-client';
 
-export type { GardenLayout, FlowerStyle };
+export type { GardenLayout, FlowerStyle, AiProvider };
 
 export interface IReminders {
 	enabled: boolean;
@@ -16,6 +17,8 @@ export interface IPreferences {
 	reduceMotion: boolean;
 	locale: string;
 	reminders: IReminders;
+	aiProvider: AiProvider | null;
+	aiApiKey: string | null;
 }
 
 export const DEFAULT_PREFERENCES: IPreferences = {
@@ -25,5 +28,7 @@ export const DEFAULT_PREFERENCES: IPreferences = {
 	highContrast: false,
 	reduceMotion: false,
 	locale: 'fr',
-	reminders: { enabled: false }
+	reminders: { enabled: false },
+	aiProvider: null,
+	aiApiKey: null
 };

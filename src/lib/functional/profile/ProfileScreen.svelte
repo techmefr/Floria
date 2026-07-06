@@ -2,8 +2,9 @@
 	import { Card, Button, SegmentedControl, Slider } from '$lib/technical/ui-kit';
 	import { FONT_SCALE_STEPS } from '$lib/technical/accessibility';
 	import { SUPPORTED_LOCALES } from '$lib/technical/i18n';
+	import { AI_PROVIDERS } from '$lib/technical/ai-client';
 	import type { AuthState } from '$lib/technical/auth';
-	import type { IPreferences, GardenLayout, FlowerStyle } from './types';
+	import type { IPreferences, GardenLayout, FlowerStyle, AiProvider } from './types';
 
 	type Props = {
 		preferences: IPreferences;
@@ -50,6 +51,10 @@
 
 	function setFontScaleIndex(index: number): void {
 		onUpdate({ fontScale: FONT_SCALE_STEPS[index].value });
+	}
+
+	function setAiProvider(value: string): void {
+		onUpdate({ aiProvider: (value || null) as AiProvider | null });
 	}
 </script>
 
@@ -163,6 +168,38 @@
 </Card>
 
 <Card>
+	<span class="title">IA d’accompagnement</span>
+	<p class="hint">
+		Utilise ta propre clé API — elle reste stockée en local sur cet appareil, jamais envoyée à nos
+		serveurs.
+	</p>
+	<div class="field">
+		<span class="label">Fournisseur</span>
+		<select
+			value={preferences.aiProvider ?? ''}
+			onchange={(event) => setAiProvider(event.currentTarget.value)}
+		>
+			<option value="">Aucun</option>
+			{#each AI_PROVIDERS as provider (provider.id)}
+				<option value={provider.id}>{provider.label}</option>
+			{/each}
+		</select>
+	</div>
+	{#if preferences.aiProvider}
+		<div class="field">
+			<span class="label">Clé API</span>
+			<input
+				type="password"
+				autocomplete="off"
+				placeholder="Colle ta clé API ici"
+				value={preferences.aiApiKey ?? ''}
+				onchange={(event) => onUpdate({ aiApiKey: event.currentTarget.value || null })}
+			/>
+		</div>
+	{/if}
+</Card>
+
+<Card>
 	<span class="title">Données</span>
 	<div class="data-actions">
 		<Button variant="secondary" onclick={onExportData}>Exporter mes données</Button>
@@ -263,7 +300,9 @@
 	}
 
 	select,
-	input[type='time'] {
+	input[type='time'],
+	input[type='password'] {
+		width: 100%;
 		border: 1px solid var(--color-border-hairline);
 		border-radius: var(--radius-button);
 		padding: 10px 12px;

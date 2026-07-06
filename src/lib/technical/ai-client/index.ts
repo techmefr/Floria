@@ -6,3 +6,10 @@ export {
 	type ToolRegistry,
 	type IToolCallResult
 } from './toolHarness';
+export {
+	sendDirectChatRequest,
+	AI_PROVIDERS,
+	ACCOMPAGNEMENT_SYSTEM_PROMPT,
+	type AiProvider,
+	type IProviderOption
+} from './directProviders';

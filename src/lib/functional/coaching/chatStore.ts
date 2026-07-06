@@ -1,9 +1,9 @@
 import { get, writable, type Writable } from 'svelte/store';
 import {
-	sendChatRequest,
 	runToolCalls,
 	type ToolRegistry,
-	type IChatMessage
+	type IChatMessage,
+	type IChatResponse
 } from '$lib/technical/ai-client';
 import {
 	appendUserTurn,
@@ -11,7 +11,8 @@ import {
 	extractSuggestions,
 	type IChatTurn
 } from './chatFlow';
-import { HABIT_TOOL_DEFINITIONS } from './habitTools';
+
+export type ChatTransport = (messages: IChatMessage[]) => Promise<IChatResponse>;
 
 export interface IChatStore {
 	turns: Writable<IChatTurn[]>;
@@ -19,11 +20,7 @@ export interface IChatStore {
 	send(text: string): Promise<void>;
 }
 
-export function createChatStore(
-	proxyUrl: string,
-	tools: ToolRegistry,
-	fetchImpl: typeof fetch = fetch
-): IChatStore {
+export function createChatStore(transport: ChatTransport, tools: ToolRegistry): IChatStore {
 	const turns = writable<IChatTurn[]>([]);
 	const isLoading = writable(false);
 
@@ -37,11 +34,7 @@ export function createChatStore(
 				content: turn.text
 			}));
 
-			const response = await sendChatRequest(
-				proxyUrl,
-				{ messages, tools: HABIT_TOOL_DEFINITIONS },
-				fetchImpl
-			);
+			const response = await transport(messages);
 
 			const results = response.toolCalls.length
 				? await runToolCalls(response.toolCalls, tools)

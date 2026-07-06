@@ -2,19 +2,15 @@ import { describe, expect, test, vi } from 'vitest';
 import { get } from 'svelte/store';
 import { createChatStore } from './chatStore';
 import type { IHabit } from '$lib/functional/habits';
-
-function fakeFetch(body: unknown) {
-	return vi.fn(async () => ({
-		ok: true,
-		status: 200,
-		json: async () => body
-	})) as unknown as typeof fetch;
-}
+import type { IChatResponse } from '$lib/technical/ai-client';
 
 describe('createChatStore', () => {
 	test('send appends the user turn, then the assistant reply once it resolves', async () => {
-		const fetchImpl = fakeFetch({ message: 'Bonjour, on en parle ?', toolCalls: [] });
-		const store = createChatStore('https://proxy.floria.app/chat', {}, fetchImpl);
+		const transport = vi.fn(async (): Promise<IChatResponse> => ({
+			message: 'Bonjour, on en parle ?',
+			toolCalls: []
+		}));
+		const store = createChatStore(transport, {});
 
 		const sendPromise = store.send('Salut');
 		expect(get(store.isLoading)).toBe(true);
@@ -38,16 +34,12 @@ describe('createChatStore', () => {
 			createdAt: 0
 		};
 
-		const fetchImpl = fakeFetch({
+		const transport = vi.fn(async (): Promise<IChatResponse> => ({
 			message: 'Voici une proposition',
 			toolCalls: [{ name: 'proposer_habitude', arguments: { name: 'Étirements' } }]
-		});
+		}));
 
-		const store = createChatStore(
-			'https://proxy.floria.app/chat',
-			{ proposer_habitude: () => suggestedHabit },
-			fetchImpl
-		);
+		const store = createChatStore(transport, { proposer_habitude: () => suggestedHabit });
 
 		await store.send('Propose-moi quelque chose de doux');
 
@@ -55,16 +47,14 @@ describe('createChatStore', () => {
 		expect(assistantTurn.suggestions).toEqual([suggestedHabit]);
 	});
 
-	test('resets isLoading even if the request fails', async () => {
-		const fetchImpl = vi.fn(async () => ({
-			ok: false,
-			status: 500,
-			json: async () => ({})
-		})) as unknown as typeof fetch;
+	test('resets isLoading even if the transport rejects', async () => {
+		const transport = vi.fn(async (): Promise<IChatResponse> => {
+			throw new Error('network down');
+		});
 
-		const store = createChatStore('https://proxy.floria.app/chat', {}, fetchImpl);
+		const store = createChatStore(transport, {});
 
-		await expect(store.send('Salut')).rejects.toThrow();
+		await expect(store.send('Salut')).rejects.toThrow('network down');
 		expect(get(store.isLoading)).toBe(false);
 	});
 });
