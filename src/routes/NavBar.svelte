@@ -11,27 +11,41 @@
 </script>
 
 <nav class="navbar">
-	{#each ITEMS as item (item.href)}
-		<a
-			href={resolve(item.href)}
-			class="nav-item"
-			class:active={$page.url.pathname === item.href}
-			class:fab={item.isFab}
-		>
-			{item.label}
-		</a>
-	{/each}
+	<div class="navbar-inner">
+		{#each ITEMS as item (item.href)}
+			<a
+				href={resolve(item.href)}
+				class="nav-item"
+				class:active={$page.url.pathname === item.href}
+				class:fab={item.isFab}
+			>
+				{item.label}
+			</a>
+		{/each}
+	</div>
 </nav>
 
 <style>
 	.navbar {
+		background: var(--color-app-bg);
+		border-top: 1px solid var(--color-border-hairline);
+		padding: 10px calc(16px + env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom))
+			calc(16px + env(safe-area-inset-right));
+	}
+
+	.navbar-inner {
 		display: flex;
 		align-items: center;
 		justify-content: space-around;
-		padding: 10px calc(16px + env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom))
-			calc(16px + env(safe-area-inset-right));
-		background: var(--color-app-bg);
-		border-top: 1px solid var(--color-border-hairline);
+		width: 100%;
+		max-width: 640px;
+		margin: 0 auto;
+	}
+
+	@media (min-width: 900px) {
+		.navbar-inner {
+			max-width: 760px;
+		}
 	}
 
 	.nav-item {

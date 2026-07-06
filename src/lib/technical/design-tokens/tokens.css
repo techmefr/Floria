@@ -60,8 +60,26 @@
 	--color-text-italic-soft: #6b6250;
 }
 
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+
 html {
 	font-size: calc(16px * var(--font-scale));
+}
+
+body {
+	background: var(--color-desk-bg);
+	color: var(--color-text-body);
+	font-family: var(--font-body);
 }
 
 .tabular-nums {

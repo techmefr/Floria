@@ -42,9 +42,11 @@
 <Defs />
 
 <div class="app-frame">
-	<main class="app-content">
-		{@render children()}
-	</main>
+	<div class="app-scroll">
+		<main class="app-content">
+			{@render children()}
+		</main>
+	</div>
 	<NavBar />
 </div>
 
@@ -52,15 +54,30 @@
 	.app-frame {
 		display: flex;
 		flex-direction: column;
-		min-height: 100vh;
+		height: 100dvh;
 		background: var(--gradient-page);
 		isolation: isolate;
 	}
 
-	.app-content {
+	.app-scroll {
 		flex: 1;
 		overflow-y: auto;
+		display: flex;
+		justify-content: center;
+	}
+
+	.app-content {
+		width: 100%;
+		max-width: 640px;
 		padding: calc(16px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) 16px
 			calc(16px + env(safe-area-inset-left));
+	}
+
+	@media (min-width: 900px) {
+		.app-content {
+			max-width: 760px;
+			padding-top: calc(32px + env(safe-area-inset-top));
+			padding-bottom: 32px;
+		}
 	}
 </style>
