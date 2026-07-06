@@ -11,6 +11,7 @@
 		userEmail?: string;
 		onUpdate: (patch: Partial<IPreferences>) => void;
 		onLogin: () => void;
+		onLoginWithGoogle: () => void;
 		onLogout: () => void;
 		onExportData: () => void;
 		onReset: () => void;
@@ -22,6 +23,7 @@
 		userEmail,
 		onUpdate,
 		onLogin,
+		onLoginWithGoogle,
 		onLogout,
 		onExportData,
 		onReset
@@ -69,7 +71,10 @@
 		{#if authState === 'authenticated'}
 			<Button variant="secondary" onclick={onLogout}>Se déconnecter</Button>
 		{:else}
-			<Button onclick={onLogin}>Se connecter</Button>
+			<div class="login-actions">
+				<Button onclick={onLogin}>Recevoir un lien par e-mail</Button>
+				<Button variant="secondary" onclick={onLoginWithGoogle}>Continuer avec Google</Button>
+			</div>
 		{/if}
 	</div>
 </Card>
@@ -190,6 +195,13 @@
 		display: flex;
 		align-items: center;
 		gap: 12px;
+		flex-wrap: wrap;
+	}
+
+	.login-actions {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
 	}
 
 	.avatar {

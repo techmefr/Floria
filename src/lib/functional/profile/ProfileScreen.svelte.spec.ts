@@ -4,22 +4,27 @@ import ProfileScreen from './ProfileScreen.svelte';
 import { DEFAULT_PREFERENCES } from './types';
 
 describe('ProfileScreen', () => {
-	test('shows "Se connecter" for a guest and reports login taps', async () => {
+	test('shows both login options for a guest and reports taps', async () => {
 		const onLogin = vi.fn();
+		const onLoginWithGoogle = vi.fn();
 		const screen = render(ProfileScreen, {
 			props: {
 				preferences: DEFAULT_PREFERENCES,
 				authState: 'guest',
 				onUpdate: vi.fn(),
 				onLogin,
+				onLoginWithGoogle,
 				onLogout: vi.fn(),
 				onExportData: vi.fn(),
 				onReset: vi.fn()
 			}
 		});
 
-		await screen.getByRole('button', { name: 'Se connecter' }).click();
+		await screen.getByRole('button', { name: 'Recevoir un lien par e-mail' }).click();
 		expect(onLogin).toHaveBeenCalled();
+
+		await screen.getByRole('button', { name: 'Continuer avec Google' }).click();
+		expect(onLoginWithGoogle).toHaveBeenCalled();
 	});
 
 	test('shows "Se déconnecter" and the email once authenticated', async () => {
@@ -30,6 +35,7 @@ describe('ProfileScreen', () => {
 				userEmail: 'gaetan@example.com',
 				onUpdate: vi.fn(),
 				onLogin: vi.fn(),
+				onLoginWithGoogle: vi.fn(),
 				onLogout: vi.fn(),
 				onExportData: vi.fn(),
 				onReset: vi.fn()
@@ -50,6 +56,7 @@ describe('ProfileScreen', () => {
 				authState: 'guest',
 				onUpdate,
 				onLogin: vi.fn(),
+				onLoginWithGoogle: vi.fn(),
 				onLogout: vi.fn(),
 				onExportData: vi.fn(),
 				onReset: vi.fn()
@@ -70,6 +77,7 @@ describe('ProfileScreen', () => {
 				authState: 'guest',
 				onUpdate,
 				onLogin: vi.fn(),
+				onLoginWithGoogle: vi.fn(),
 				onLogout: vi.fn(),
 				onExportData: vi.fn(),
 				onReset: vi.fn()

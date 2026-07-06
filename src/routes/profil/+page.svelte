@@ -30,6 +30,14 @@
 		if (email) void supabase.auth.signInWithOtp({ email });
 	}
 
+	function handleLoginWithGoogle(): void {
+		if (!supabase) return;
+		void supabase.auth.signInWithOAuth({
+			provider: 'google',
+			options: { redirectTo: `${window.location.origin}/profil` }
+		});
+	}
+
 	function handleLogout(): void {
 		if (!supabase) return;
 		void supabase.auth.signOut().then(() => {
@@ -69,6 +77,7 @@
 	{userEmail}
 	onUpdate={(patch) => stores.preferences.update(patch)}
 	onLogin={handleLogin}
+	onLoginWithGoogle={handleLoginWithGoogle}
 	onLogout={handleLogout}
 	onExportData={handleExportData}
 	onReset={handleReset}
